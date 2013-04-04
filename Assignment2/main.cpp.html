@@ -1,0 +1,28 @@
+<html><head></head><body><pre>
+/*
+ *  main.cpp
+ *  cpp_assignment2
+ *
+ *  Created by Khee Hong Loke on 23/09/10.
+ *
+ */
+
+#include "main.h"
+
+int main()
+{
+	Library *newLib = new Library();
+	FileIO *fileIO = new FileIO(newLib, "catalogue.txt", "members.txt");
+	
+	fileIO->importCatalogueData();
+	fileIO->importMemberData();
+	
+	TextInterface *ui = new TextInterface(newLib);
+	
+	fileIO->exportCatalogueData();
+	fileIO->exportMemberData();
+	
+	return 0;
+}
+
+</pre></body></html>

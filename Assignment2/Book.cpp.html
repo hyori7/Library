@@ -1,0 +1,140 @@
+<html><head></head><body><pre>
+/*
+ *  Book.cpp
+ *  cpp_assignment2
+ *
+ *  Created by Khee Hong Loke on 23/09/10.
+ *	Mostly written by Zheng Yu Ng.
+ *
+ */
+
+
+#include "Book.h"
+
+Book::Book(void)
+{
+}
+
+Book::Book(string title, string author, string publisher, int year, string edition, int isbn):
+_title(title), _author(author), _publisher(publisher), _year(year), _edition(edition), _isbn(isbn)
+{
+}
+
+string Book::getTitle() const
+{
+	return _title;
+}
+
+string Book::getAuthor() const
+{
+	return _author;
+}
+
+string Book::getPublisher() const
+{
+	return _publisher;
+}
+
+int Book::getYear() const
+{
+	return _year;
+}
+
+string Book::getEdition() const
+{
+	return _edition;
+}
+
+int Book::getISBN() const
+{
+	return _isbn;
+}
+
+void Book::setTitle(const string title)
+{
+	_title=title;
+}
+
+void Book::setAuthor(const string author)
+{
+	_author=author;
+}
+
+void Book::setEdition(const string edition)
+{
+	_edition=edition;
+}
+
+void Book::setYear(const int year)
+{
+	_year=year;
+}
+
+void Book::setPublisher(const string publisher)
+{
+	_publisher=publisher;
+}
+
+void Book::setISBN(const int isbn)
+{
+	_isbn=isbn;
+}
+
+bool Book::operator&lt;(const Book& other) 
+{
+    return getTitle() &lt; other.getTitle();
+}
+
+bool Book::operator>(const Book& other) 
+{
+    return getTitle() > other.getTitle();
+}
+
+bool Book::operator==(const Book& other) 
+{
+    return getTitle() == other.getTitle();
+}
+
+bool Book::operator!=(const Book& other) 
+{
+    return getTitle() != other.getTitle();
+}
+
+bool Book::operator&lt;=(const Book& other) 
+{
+    return getTitle() &lt;= other.getTitle();
+}
+
+bool Book::operator>=(const Book& other) 
+{
+    return getTitle() >= other.getTitle();
+}
+
+void Book::exportData(ostream &out) 
+{
+	out &lt;&lt; "==begin_book==" &lt;&lt; endl
+	&lt;&lt; _title &lt;&lt; endl
+	&lt;&lt; _author &lt;&lt; endl
+	&lt;&lt; _publisher &lt;&lt; endl
+	&lt;&lt; _edition &lt;&lt; endl
+	&lt;&lt; _year &lt;&lt; endl
+	&lt;&lt; _isbn &lt;&lt; endl
+	&lt;&lt; "==end_book==" &lt;&lt; endl;
+}
+
+void Book::displayBook(ostream &out)
+{
+	out &lt;&lt;endl&lt;&lt; "==Book Detail==" &lt;&lt; endl&lt;&lt;endl
+		&lt;&lt;"Title: "&lt;&lt; _title &lt;&lt; endl
+		&lt;&lt;"Author: "&lt;&lt; _author &lt;&lt; endl
+		&lt;&lt;"Publisher: "&lt;&lt; _publisher &lt;&lt; endl
+		&lt;&lt;"Year Released: "&lt;&lt; _year &lt;&lt; endl
+		&lt;&lt;"Edition: "&lt;&lt; _edition &lt;&lt; endl
+		&lt;&lt;"ISBN: "&lt;&lt; _isbn &lt;&lt; endl;
+}
+
+Book::~Book(void)
+{
+}
+
+</pre></body></html>

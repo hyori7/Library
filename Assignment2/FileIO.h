@@ -1,0 +1,76 @@
+#ifndef FILE_IO
+#define FILE_IO
+
+#include <string>
+#include <fstream>
+#include "Library.h"
+#include "Member.h"
+#include "Student.h"
+#include "Staff.h"
+
+class FileIO
+{
+private:
+	Library *library;
+	ifstream catalogueInputStream;
+	ifstream membersInputStream;
+	string catalogueFileName;
+	string membersFileName;
+	
+	
+	/*	Pre:  library is not null, catalogueInputStream not null with file opened
+	 *	Post: data with the catalogue tags are extracted to objects and added to the library object
+	 */
+	string extractCatalogueData();
+	
+	/*	Pre:  library is not null, catalogueInputStream not null with file opened
+	 *	Post: data with the book tags are extracted to objects and added to the library object
+	 */
+	string extractBookData(CatalogueBook *aCatalogueBook);
+	
+	/*	Pre:  library is not null, memberInputStream not null with file opened
+	 *	Post: data with the member tags are extracted to objects and added to the library object
+	 */
+	string extractMemberData(string type);
+	
+	/*	Pre:  library is not null, memberInputStream not null with file opened
+	 *	Post: data with the leasedbook tags are extracted to the objects and added to the library object
+	 */
+	string extractLeasedBookData(Member *aMember);
+	
+public:
+	
+	/*	Pre:  true
+	 *	Post: a new FileIO object is created with the files with the given names opened and library pointer pointing to the given pointer
+	 */
+	FileIO(Library *aLibrary, string aCatalogueFileName, string aMembersFileName);
+	
+	/*	Pre:  true
+	 *	Post: this object is deallocated from memory
+	 */
+	~FileIO();
+	
+	
+	/*	Pre:  library object not null
+	 *	Post: all catalogue data is exported to the catalogue file
+	 */
+	void exportCatalogueData();
+	
+	/*	Pre:  library object not null
+	 *	Post: all member data is exported to the member file
+	 */
+	void exportMemberData();
+	
+	
+	/*	Pre:  library is not null, catalogueInputStream not null with file opened 
+	 *	Post: all data of the library catalogue is imported from the given file
+	 */
+	void importCatalogueData();
+	
+	/*	Pre:  library is not null, memberInputStream not null with file opened
+	 *	Post: all data of the library member list is imported from the given file
+	 */
+	void importMemberData();
+};
+
+#endif

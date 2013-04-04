@@ -1,0 +1,88 @@
+<html><head></head><body><pre>
+/*
+ *  LeasedBook.cpp
+ *  cpp_assignment2
+ *
+ *  Created by Khee Hong Loke on 6/10/10.
+ *	Written by Khee Hong Loke
+ *
+ */
+
+#include "LeasedBook.h"
+
+LeasedBook::LeasedBook() {
+}
+
+LeasedBook::LeasedBook(Book *aBook) {
+	book = aBook;
+	
+	leaseDate = time(NULL);
+}
+
+LeasedBook::~LeasedBook() {
+	//delete book;
+	/**
+	 *	Book must not be deleted because it is a link to a
+	 *	Book object that is used also by the catalogue.
+	 *	This object is meant to be cleansed by the CatalogueBook
+	 *	object, not here.
+	 */
+}
+
+Book* LeasedBook::getBookPtr() {
+	return book;
+}
+
+void LeasedBook::setBookPtr(Book *aBook) {
+	book = aBook;
+}
+
+void LeasedBook::setLeaseDate(time_t dateTime) {
+	leaseDate = dateTime;
+}
+
+bool LeasedBook::isOverdue() {
+	time_t rawCurrentTime = time(NULL);
+	
+	double hour = 3600; //seconds
+	double day = 24 * hour;
+	double week = 7 * day;
+	
+	double timeDiff = difftime(rawCurrentTime, leaseDate);
+	timeDiff -= 4 * week;
+	
+	if (timeDiff &lt;= 0) {
+		return false;
+	} else {
+		return true;
+	}
+
+}
+
+void LeasedBook::showLeaseDate(ostream &out) {
+	out &lt;&lt; asctime(gmtime(&leaseDate)) &lt;&lt; endl;
+};
+
+void LeasedBook::exportData(ostream &out) {
+	tm *outputDate = gmtime(&leaseDate);
+	
+	out &lt;&lt; "==begin_leased==" &lt;&lt; endl
+	&lt;&lt; outputDate->tm_sec &lt;&lt; endl
+	&lt;&lt; outputDate->tm_min &lt;&lt; endl
+	&lt;&lt; outputDate->tm_hour &lt;&lt; endl
+	&lt;&lt; outputDate->tm_mday &lt;&lt; endl
+	&lt;&lt; outputDate->tm_mon &lt;&lt; endl
+	&lt;&lt; outputDate->tm_year &lt;&lt; endl
+	&lt;&lt; outputDate->tm_wday &lt;&lt; endl
+	&lt;&lt; outputDate->tm_yday &lt;&lt; endl
+	&lt;&lt; outputDate->tm_isdst &lt;&lt; endl
+	&lt;&lt; "==begin_title==" &lt;&lt; endl
+	&lt;&lt; book->getTitle() &lt;&lt; endl
+	&lt;&lt; "==end_title==" &lt;&lt; endl;
+	
+	out &lt;&lt; "==end_leased==" &lt;&lt; endl;
+	
+	//delete outputDate;
+}
+
+</pre></body></html>

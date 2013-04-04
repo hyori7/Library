@@ -1,0 +1,20 @@
+==begin_library==
+==begin_staff==
+1
+Maolin Tang
+123 abc
+eail
+asd
+tang
+123
+==end_staff==
+==begin_student==
+2
+stan
+1
+1
+1
+stan
+1
+==end_student==
+==end_library==

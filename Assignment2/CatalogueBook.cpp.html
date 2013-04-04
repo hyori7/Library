@@ -1,0 +1,131 @@
+<html><head></head><body><pre>
+/*
+ *  CatalogueBook.cpp
+ *  cpp_assignment2
+ *
+ *  Created by Khee Hong Loke on 6/10/10.
+ *	Written by Khee Hong Loke
+ *
+ */
+
+#include "CatalogueBook.h"
+
+CatalogueBook::CatalogueBook() {
+}
+
+CatalogueBook::CatalogueBook(Book *aBook) {
+	borrowedCount = 0;
+	totalCopies = 1;
+	availableCopies = 1;
+	
+	book = aBook;
+}
+
+CatalogueBook::CatalogueBook(Book *aBook, int aCopies) {
+	borrowedCount = 0;
+	totalCopies = aCopies;
+	availableCopies = aCopies;
+	
+	book = aBook;
+}
+
+CatalogueBook::~CatalogueBook() {
+	delete book;
+}
+
+int CatalogueBook::getBorrowedCount() {
+	return borrowedCount;
+}
+
+int CatalogueBook::getTotalCopies() {
+	return totalCopies;
+}
+
+int CatalogueBook::getAvailableCopies() {
+	return availableCopies;
+}
+
+Book* CatalogueBook::getBookPtr() {
+	return book;
+}
+
+void CatalogueBook::setBorrowedCount(int aBorrowedCount) {
+	borrowedCount = aBorrowedCount;
+}
+
+void CatalogueBook::setTotalCopies(int aTotalCopies) {
+	totalCopies = aTotalCopies;
+}
+
+void CatalogueBook::setAvailableCopies(int aAvailableCopies) {
+	availableCopies = aAvailableCopies;
+}
+
+void CatalogueBook::setBookPtr(Book* aBook) {
+	book = aBook;
+}
+
+void CatalogueBook::addCopies(int aCopies) {
+	totalCopies += aCopies;
+	availableCopies += aCopies;
+}
+
+bool CatalogueBook::borrow() {
+	if (availableCopies > 0) {
+		borrowedCount++;
+		availableCopies--;
+		
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool CatalogueBook::operator&lt;(CatalogueBook& other) {
+	return *(getBookPtr()) &lt; *(other.getBookPtr());
+}
+
+bool CatalogueBook::operator>(CatalogueBook& other) {
+	return *(getBookPtr()) > *(other.getBookPtr());
+}
+
+bool CatalogueBook::operator&lt;=(CatalogueBook& other) {
+	return *(getBookPtr()) &lt;= *(other.getBookPtr());
+}
+
+bool CatalogueBook::operator>=(CatalogueBook& other) {
+	return *(getBookPtr()) >= *(other.getBookPtr());
+}
+
+bool CatalogueBook::operator==(CatalogueBook& other) {
+	return *(getBookPtr()) == *(other.getBookPtr());
+}
+
+bool CatalogueBook::operator!=(CatalogueBook& other) {
+	return *(getBookPtr()) != *(other.getBookPtr());
+}
+
+void CatalogueBook::returnBook() {
+	availableCopies += 1;
+}
+
+void CatalogueBook::exportData(ostream &out) {
+	out &lt;&lt; "==begin_catalogue==" &lt;&lt; endl
+	&lt;&lt; borrowedCount &lt;&lt; endl
+	&lt;&lt; totalCopies &lt;&lt; endl
+	&lt;&lt; availableCopies &lt;&lt; endl;
+	
+	book->exportData(out);
+	
+	out &lt;&lt; "==end_catalogue==" &lt;&lt; endl;
+}
+
+void CatalogueBook::displayStatus(ostream &out){
+	out&lt;&lt;endl&lt;&lt;"==Book Status=="&lt;&lt;endl&lt;&lt;endl
+		&lt;&lt;"Total Copies: "&lt;&lt;totalCopies&lt;&lt;endl
+		&lt;&lt;"Available Copies: "&lt;&lt;availableCopies&lt;&lt;endl;
+
+	book->displayBook(out);
+}
+
+</pre></body></html>

@@ -1,0 +1,648 @@
+<html><head></head><body><pre>
+/*
+ *  TextInterface.cpp
+ *  cpp_assignment2
+ *
+ *  Created by Khee Hong Loke on 23/09/10.
+ *	Mostly written by Zheng Yu Ng.
+ *
+ */
+
+#include "TextInterface.h"
+
+TextInterface::TextInterface(Library *aLibrary)
+{
+	library = aLibrary;
+	currentLoggedIn = NULL;
+	cout&lt;&lt;"=============Welcome to the Library Management System============="&lt;&lt;endl;
+	
+	dispMainMenu();
+}
+
+TextInterface::~TextInterface(void)
+{
+	delete library;
+}
+
+void TextInterface::dispMainMenu(void)
+{
+	bool exit = false;
+	string empty;
+	while(!exit)
+	{
+		cout&lt;&lt;"Please choose one of the following options:"&lt;&lt;endl
+		&lt;&lt;"1. Register New Member: "&lt;&lt;endl
+		&lt;&lt;"2. Remove Member: "&lt;&lt;endl
+		&lt;&lt;"3. Reset Password: "&lt;&lt;endl
+		&lt;&lt;"4. Add Book: "&lt;&lt;endl
+		&lt;&lt;"5. Remove Book: "&lt;&lt;endl
+		&lt;&lt;"6. Add Existing Book Copies: "&lt;&lt;endl
+		&lt;&lt;"7. Remove Exisiting Book Copies: "&lt;&lt;endl
+		&lt;&lt;"8. Search Book: "&lt;&lt;endl
+		&lt;&lt;"9. List overdue items of member: "&lt;&lt;endl
+		&lt;&lt;"10. Member Login: "&lt;&lt;endl
+		&lt;&lt;"0. Exit: "&lt;&lt;endl;
+		
+		int choice;
+		cin>>choice;
+		getline(cin, empty);
+		
+		switch(choice)
+		{
+			case 1:
+				addNewMember();
+				break;
+				
+			case 2:
+				removeMember();
+				break;
+				
+			case 3:
+				resetNewPassword();
+				break;
+				
+			case 4:
+				addNewBook();
+				break;
+				
+			case 5:
+				removeBook();
+				break;
+
+			case 6:
+				addExistingBook();
+				break;
+
+			case 7:
+				removeCopies();
+				break;
+
+			case 8:
+				searchBook();
+				break;
+				
+			case 9:
+				listMemberOverdue();
+				break;
+				
+			case 10:
+				memberLogin();
+				if (currentLoggedIn != NULL) 
+				{
+					memberMenu();
+				} 
+				else 
+				{
+					cout &lt;&lt;endl&lt;&lt; "Login Failed!"&lt;&lt;endl&lt;&lt;endl;
+				}
+				
+				break;
+				
+			case 0:
+				exit = true;
+				cout&lt;&lt;"bb" &lt;&lt;endl;
+				break;
+				
+			default:
+				cout&lt;&lt;"Invalid Input!! Please try again. "&lt;&lt;endl;
+				break;
+		}
+		cout&lt;&lt;endl;
+	}
+	
+}
+
+void TextInterface::memberMenu(void)
+{
+	bool exit = false;
+	string empty;
+	while(!exit)
+	{
+		cout&lt;&lt;endl&lt;&lt;"Please choose one of the following options:"&lt;&lt;endl
+		&lt;&lt;"1. Search Book: "&lt;&lt;endl
+		&lt;&lt;"2. Borrow Book: "&lt;&lt;endl
+		&lt;&lt;"3. Return Book: "&lt;&lt;endl
+		&lt;&lt;"4. View items currently checked out :"&lt;&lt;endl
+		&lt;&lt;"5. Top Ten Books: "&lt;&lt;endl
+		&lt;&lt;"6. Update Member: "&lt;&lt;endl
+		&lt;&lt;"0. Main Menu: "&lt;&lt;endl;
+		
+		int choice;
+		cin>>choice;
+		getline(cin, empty);
+		
+		switch(choice)
+		{
+			case 1:
+				searchBook();
+				break;
+				
+			case 2:
+				memberBorrow();
+				break;
+				
+			case 3:
+				returnBook();
+				break;
+				
+			case 4:
+				//current books
+				currentLoggedIn->listBooks(cout);
+				break;
+				
+			case 5:
+				library->listTopTenBooks(cout);
+				break;
+				
+			case 6:
+				updateMemberInfo();
+				
+			case 0:
+				exit = true;
+				currentLoggedIn = NULL;
+				break;
+				
+			default:
+				cout&lt;&lt;"Invalid Input!! Please try again. "&lt;&lt;endl;
+				break;
+		}
+		cout&lt;&lt;endl;
+	}
+}
+
+void TextInterface::memberLogin(void)
+{
+	int id;
+	string username, password;
+	bool safe = false;
+	
+	cout&lt;&lt;"=====Member Login====="&lt;&lt;endl;
+	cout&lt;&lt;"Enter Username: ";
+	username = getStringInput();
+	
+	cout&lt;&lt;"Enter Password: ";
+	password = getStringInput();
+	
+	while (!safe) {
+		cout&lt;&lt;"Enter Member ID: ";
+		
+		try {
+			id = getIntInput();
+			safe = true;
+		}
+		catch (string msg) {
+			cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+		}
+	}
+	
+	if (library->authenticateMember(id, username, password)) 
+	{
+		currentLoggedIn = library->getMember(id);
+	}
+	
+}
+
+void TextInterface::addNewBook(void)
+{
+	string title, author, publisher, edition;
+	int year, isbn;
+	bool safe = false;
+	
+	cout&lt;&lt;"Add New Book"&lt;&lt;endl
+	&lt;&lt;"==============="&lt;&lt;endl;
+	cout&lt;&lt;"Enter Book Title: ";
+	title = getStringInput();
+	
+	cout&lt;&lt;"Enter Book Author: ";
+	author = getStringInput();
+	
+	cout&lt;&lt;"Enter Book publisher: ";
+	publisher = getStringInput();
+	
+    cout&lt;&lt;"Enter Book Edition: ";
+	edition = getStringInput();
+	
+	while (!safe) {
+		cout&lt;&lt;"Enter Book Year: ";
+		
+		try {
+			year = getIntInput();
+			safe = true;
+		}
+		catch (string msg) {
+			cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+		}	
+	}
+	
+	safe = false;
+	while (!safe) {
+		cout&lt;&lt;"Enter Book ISBN: ";
+		
+		try {
+			isbn = getIntInput();
+			safe = true;
+		}
+		catch (string msg) {
+			cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+		}	
+	}
+	
+	library->addBook(new Book(title, author, publisher, year, edition, isbn));
+	
+	cout&lt;&lt; endl&lt;&lt;"Book Added!"&lt;&lt;endl;
+}
+
+void TextInterface::removeBook(void)
+{
+	string title;
+
+	cout&lt;&lt;"Remove Book"&lt;&lt;endl
+		&lt;&lt;"======================"&lt;&lt;endl;
+	cout&lt;&lt;"Enter Book Title: ";
+	title = getStringInput();
+
+	int searchBook = library->search(title);
+	if(searchBook>=0){
+	library->deleteBook(title);
+	}
+	else
+	{
+		cout&lt;&lt;endl&lt;&lt;"Book not found!"&lt;&lt;endl&lt;&lt;endl;
+	}
+}
+
+void TextInterface::addExistingBook(void)
+{
+	string title; 
+	int copies;
+	bool safe = false;
+	
+	//ask title
+	cout&lt;&lt;"=======Add Existing Book======"&lt;&lt;endl;
+	cout&lt;&lt;"Enter Title: ";
+	title = getStringInput();
+	//ask copies)
+	
+	while (!safe) {
+		cout&lt;&lt;"How many copies would you like to add: ";
+		try {
+			copies = getIntInput();
+			safe = true;
+		}
+		catch (string msg) {
+			cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+		}
+	}
+
+    int searchBook = library->search(title);
+	if(searchBook>=0){
+	CatalogueBook *book = library->getBook(searchBook);
+	library->addBook(book, copies);
+	cout&lt;&lt;endl&lt;&lt;"You have added "&lt;&lt;copies&lt;&lt;" copies of "&lt;&lt;title&lt;&lt;endl;
+	}
+	else
+	{
+		cout&lt;&lt;endl&lt;&lt;"Book not found!"&lt;&lt;endl&lt;&lt;endl;
+	}
+	
+	
+	
+	cout&lt;&lt;"================================="&lt;&lt;endl;
+}
+
+void TextInterface::removeCopies(void)
+{
+	string title;
+	int copies;
+	cout&lt;&lt;endl&lt;&lt;"Remove Book Copies"&lt;&lt;endl
+		&lt;&lt;"======================="&lt;&lt;endl;
+	cout&lt;&lt;"Enter Book Title: ";
+	title = getStringInput();
+	cout&lt;&lt;"Enter the amount of copies: ";
+	copies = getIntInput();
+
+	int searchBook = library->search(title);
+	if(searchBook>=0){
+	library->deleteBookCopies(title, copies);
+	}
+	else
+	{
+		cout&lt;&lt;endl&lt;&lt;"Book not found!"&lt;&lt;endl&lt;&lt;endl;
+	}
+	
+
+}
+void TextInterface::searchBook(void)
+{
+	string title;
+	
+	if(library->isEmpty())
+	{
+		cout&lt;&lt;"The library is currently empty."&lt;&lt;endl;
+	}
+	else
+	{
+		cout&lt;&lt;"===========Search Book============"&lt;&lt;endl;
+		cout&lt;&lt;"Please enter book title: ";
+		getline(cin, title);
+		
+		int foundBook = library->search(title);
+		
+			
+		
+		if (foundBook>=0) {
+			CatalogueBook* book = library->getBook(foundBook);
+			
+			
+			book->displayStatus(cout);
+		} else {
+			//Change this to a nice message please.
+			cout &lt;&lt;endl&lt;&lt; "Book Not found!"&lt;&lt;endl&lt;&lt;endl;
+		}
+		
+	}
+	cout&lt;&lt;endl&lt;&lt;"=============End Search============="&lt;&lt;endl;
+	
+}
+
+string TextInterface::getStringInput(void) 
+{
+	string tempString;
+	getline(cin, tempString);
+	
+	return tempString;
+}
+
+int TextInterface::getIntInput(void)
+{
+	string tempString = "";
+	string errorMsg = "Invalid Input!";
+	int tempInt = -1;
+	
+	cin >> tempString;
+	if (isdigit(*(tempString.c_str()))) {
+		tempInt = atoi(tempString.c_str());
+	} else {
+		throw errorMsg;
+	}	
+	
+	return tempInt;
+}
+
+void TextInterface::addNewMember(void)
+{
+	string name, address, email, number, username, password;
+	int choice;
+	
+	cout&lt;&lt;"Register New Member"&lt;&lt;endl
+	&lt;&lt;"==================="&lt;&lt;endl;
+	cout&lt;&lt;"Enter Name: ";
+	name = getStringInput();
+	
+	cout&lt;&lt;"Enter Address: ";
+	address = getStringInput();
+	
+	cout&lt;&lt;"Enter Email: ";
+	email = getStringInput();
+	
+	cout&lt;&lt;"Enter Phone Number: ";
+	number = getStringInput();
+	
+	cout&lt;&lt;"Create New Username: ";
+	username = getStringInput();
+	
+	cout&lt;&lt;"Create New Password: ";
+	password = getStringInput();
+	
+	cout&lt;&lt;endl&lt;&lt;"Choose an option:"&lt;&lt;endl
+	&lt;&lt;"1. Student"&lt;&lt;endl
+	&lt;&lt;"2. Staff"&lt;&lt;endl;
+	cin>>choice;
+	int memberId = -1;
+	switch(choice)
+	{
+		case 1:
+			memberId = library->addMember(new Student(name, address, email, number, username, password));
+			break;
+		case 2:
+			memberId = library->addMember(new Staff(name, address, email, number, username, password));
+			break;
+		default:
+			cout&lt;&lt;"Invalid Input!! Please try again. "&lt;&lt;endl;				
+			break;
+	}
+	
+	cout&lt;&lt;endl&lt;&lt;endl;
+    cout&lt;&lt;"Member Successfully Registred!"&lt;&lt;endl;
+	cout&lt;&lt;endl&lt;&lt;"Given Member ID: "&lt;&lt;memberId&lt;&lt;endl&lt;&lt;endl;
+	
+	cout&lt;&lt;"====================================="&lt;&lt;endl&lt;&lt;endl;
+	
+}
+
+void TextInterface::removeMember(void)
+{
+	int id;
+	bool safe = false;
+	
+	cout&lt;&lt;"Remove Member"&lt;&lt;endl
+	&lt;&lt;"================"&lt;&lt;endl;
+	
+	while (!safe) {
+		cout&lt;&lt;"Enter ID: ";
+		
+		try {
+			id = getIntInput();
+			safe = true;
+		}
+		catch (string msg) {
+			cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+		}
+	}
+	
+	library->removeMember(id);
+	cout&lt;&lt;"=================================="&lt;&lt;endl&lt;&lt;endl&lt;&lt;endl;
+}
+
+void TextInterface::resetNewPassword(void)
+{
+	int memberId; 
+	string password;
+	bool safe = false;
+	
+	cout&lt;&lt;"Reset Password"&lt;&lt;endl
+	&lt;&lt;"==================="&lt;&lt;endl;
+	cout&lt;&lt;"Enter New Password: ";
+	password = getStringInput();
+	
+	while (!safe) {
+		cout&lt;&lt;"Enter Member ID: ";
+		
+		try {
+			memberId = getIntInput();
+			safe = true;
+		}
+		catch (string msg) {
+			cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+		}
+	}
+	
+	
+	library->resetPassword(memberId, password);
+	cout&lt;&lt;"=================================="&lt;&lt;endl&lt;&lt;endl&lt;&lt;endl;
+}
+
+void TextInterface::listMemberOverdue(void)
+{
+	int id;
+	bool safe = false;
+	
+	cout&lt;&lt;"List Overdue"&lt;&lt;endl
+	&lt;&lt;"=================================="&lt;&lt;endl&lt;&lt;endl&lt;&lt;endl;
+
+	while (!safe) {
+		cout&lt;&lt;"Enter Member ID: ";
+		
+		try {
+			id = getIntInput();
+			safe = true;
+		}
+		catch (string msg) {
+			cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+		}
+		
+	}
+	
+	if(library->getMember(id)->hasOverdue())
+	{
+		library->listMemberOverdue(id, cout);
+	}
+	else{
+		cout&lt;&lt;endl;
+		cout&lt;&lt;"This member has no overdue items"&lt;&lt;endl;
+	}
+	cout&lt;&lt;endl;
+	cout&lt;&lt;"============================="&lt;&lt;endl&lt;&lt;endl;
+}
+
+
+void TextInterface::memberBorrow(void)
+{
+	bool safe = false;
+	int option;
+	
+	if(currentLoggedIn->hasOverdue())
+	{
+		cout&lt;&lt;"No further books are allowed until overdue items are returned!"&lt;&lt;endl;
+	}
+	else
+	{
+		string title;
+		cout&lt;&lt;"Borrow Book"&lt;&lt;endl
+		&lt;&lt;"=================================="&lt;&lt;endl&lt;&lt;endl&lt;&lt;endl;
+		cout&lt;&lt;"Enter Book Title: ";
+		title = getStringInput();
+		
+		if (currentLoggedIn->hasTitle(title)) 
+		{
+			cout &lt;&lt; endl &lt;&lt; "You have already borrowed this book!" &lt;&lt; endl;
+		}
+		else 
+		{
+			int bookIndex = library->search(title);
+			if (bookIndex >= 0) {
+				CatalogueBook* book = library->getBook(bookIndex);
+				book->displayStatus(cout);
+				
+				while (!safe) {
+					cout&lt;&lt;endl&lt;&lt;"Would you like to borrow this book?"&lt;&lt;endl
+					&lt;&lt;"1. Yes"&lt;&lt;endl
+					&lt;&lt;"2. No"&lt;&lt;endl&lt;&lt;endl;
+					
+					try {
+						option = getIntInput();
+						safe = true;
+					}
+					catch (string msg) {
+						cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+					}
+				}
+				
+				switch(option)
+				{
+					case 1:
+						if (!(currentLoggedIn->borrowBook(book)))
+						{
+							cout &lt;&lt;endl&lt;&lt; "You have exceeded the limit!" &lt;&lt; endl&lt;&lt;endl;
+						}
+						else {
+						cout&lt;&lt;endl&lt;&lt;"You have borrowed "&lt;&lt;title&lt;&lt;endl&lt;&lt;endl;
+						}
+						break;
+					case 2:
+						memberMenu();
+						break;
+					default:
+						cout&lt;&lt;"Invalid Input!"&lt;&lt;endl;
+				}
+				cout&lt;&lt;"=================================="&lt;&lt;endl&lt;&lt;endl&lt;&lt;endl;
+			} else {
+				cout &lt;&lt;endl&lt;&lt; "Book title not found!" &lt;&lt; endl;
+			}
+		}
+	}
+	
+	
+}
+
+void TextInterface::returnBook(void)
+{
+	bool safe = false;
+	int id;
+	
+	cout&lt;&lt;"Return Book"&lt;&lt;endl
+	&lt;&lt;"==================="&lt;&lt;endl;
+	currentLoggedIn->listBooks(cout);
+	
+	while (!safe) {
+		cout&lt;&lt;"Enter Book ID: ";
+		try {
+			id = getIntInput();
+			safe = true;
+		}
+		catch (string msg) {
+			cout &lt;&lt; endl &lt;&lt; msg &lt;&lt; endl;
+		}
+	}
+	
+	library->returnBook(currentLoggedIn->returnBook(id));
+	cout&lt;&lt;"============================="&lt;&lt;endl;
+}
+
+void TextInterface::updateMemberInfo(void)
+{
+	string name;
+	string email;
+	string address;
+	string phone;
+	int memberId;
+	string password;
+	
+
+	cout&lt;&lt;"Enter Name: "&lt;&lt;endl;
+	name = getStringInput();
+	cout&lt;&lt;"Enter Email: "&lt;&lt;endl;
+	email = getStringInput();
+	cout&lt;&lt;"Enter Address: "&lt;&lt;endl;
+	address = getStringInput();
+	cout&lt;&lt;"Enter Phone Number: "&lt;&lt;endl;
+	phone = getStringInput();
+	cout&lt;&lt;"Enter New Password: "&lt;&lt;endl;
+	password = getStringInput();
+
+	memberId = currentLoggedIn->getMemberId();
+	
+	library->updateMember(memberId, name, email, address, phone, password);
+}
+
+</pre></body></html>

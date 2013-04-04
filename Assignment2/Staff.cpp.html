@@ -1,0 +1,54 @@
+<html><head></head><body><pre>
+/*
+ *  Staff.cpp
+ *  cpp_assignment2
+ *
+ *  Created by Khee Hong Loke on 23/09/10.
+ *	Written by Khee Hong Loke
+ *
+ */
+
+#include "Staff.h"
+Staff::Staff(string name, string address, string email, string contactNumber, string username, string password):
+Member(name, address, email, contactNumber, username, password) {
+	borrowedBooks = new ArrayList&lt;LeasedBook>();
+	borrowedBooks->setMaxSize(10);
+}
+
+
+Staff::~Staff() {
+	delete [] borrowedBooks;
+}
+
+bool Staff::borrowBook(CatalogueBook *aCatalogueBook) {
+	if (borrowedBooks->getMaxSize()>borrowedBooks->getSize() && aCatalogueBook->borrow()) {
+		LeasedBook *thisBook = new LeasedBook(aCatalogueBook->getBookPtr());
+		
+		if (borrowedBooks->add(thisBook) >= 0) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
+
+void Staff::exportData(ostream &out) {
+	out &lt;&lt; "==begin_staff==" &lt;&lt; endl
+	&lt;&lt; getMemberId() &lt;&lt; endl
+	&lt;&lt; getName() &lt;&lt; endl
+	&lt;&lt; getAddress() &lt;&lt; endl
+	&lt;&lt; getEmail() &lt;&lt; endl
+	&lt;&lt; getContactNumber() &lt;&lt; endl
+	&lt;&lt; getUsername() &lt;&lt; endl
+	&lt;&lt; getPassword() &lt;&lt; endl;
+	
+	for (int i=0; i&lt;borrowedBooks->getSize(); i++) {
+		borrowedBooks->get(i)->exportData(out);
+	}
+	
+	out &lt;&lt; "==end_staff==" &lt;&lt; endl;
+}
+
+</pre></body></html>
